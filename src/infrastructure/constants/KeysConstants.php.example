@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+namespace omarinina\infrastructure\constants;
+
+class KeysConstants
+{
+    public const VK_CLIENT_KEY = 'YOUR_CLIENT_VK_KEY';
+    public const VK_CLIENT_ID = 'YOUR_CLIENT_VK_ID';
+}
