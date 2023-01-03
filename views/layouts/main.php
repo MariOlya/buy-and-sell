@@ -83,13 +83,21 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?php ActiveForm::end() ?>
         <?php if (!Yii::$app->user->isGuest) : ?>
             <a class="header__avatar avatar" href="#">
-                <img src="<?= $currentUser->avatarSrc ?>" srcset="<?= $currentUser->avatarSrc ?> 2x" alt="Аватар пользователя">
+                <img
+                        src="<?= $currentUser->avatarSrc ?>"
+                        srcset="<?= $currentUser->avatarSrc ?> 2x"
+                        alt="Аватар пользователя"
+                >
             </a>
         <?php endif; ?>
         <?php if (Yii::$app->user->isGuest) : ?>
-        <?php
-            echo Html::a('Вход и регистрация', Url::to(['register/index']), ['class'=>'header__input', 'style' => 'display:flex']);
-        ?>
+            <?php
+            echo Html::a(
+                'Вход и регистрация',
+                Url::to(['register/index']),
+                ['class'=>'header__input', 'style' => 'display:flex']
+            );
+            ?>
         <?php endif; ?>
     </div>
 
@@ -102,7 +110,12 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <footer class="page-footer">
     <div class="page-footer__wrapper">
         <div class="page-footer__col">
-            <a href="https://htmlacademy.ru/" target="_blank" class="page-footer__logo-academy" aria-label="Ссылка на сайт HTML-Академии">
+            <a
+                    href="https://htmlacademy.ru/"
+                    target="_blank"
+                    class="page-footer__logo-academy"
+                    aria-label="Ссылка на сайт HTML-Академии"
+            >
                 <svg width="132" height="46">
                     <use xlink:href="img/sprite_auto.svg#logo-htmlac"></use>
                 </svg>
@@ -129,6 +142,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         </div>
     </div>
 </footer>
+
+<?php if (isset($this->blocks['chat'])) : ?>
+    <?= $this->blocks['chat'] ?>
+<?php endif; ?>
 
 <?php $this->endBody() ?>
 </body>

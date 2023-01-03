@@ -3,14 +3,11 @@
 declare(strict_types=1);
 
 use app\widgets\CommentWidget;
-use omarinina\domain\models\ads\AdCategories;
 use omarinina\domain\models\ads\Ads;
-use omarinina\domain\models\ads\AdTypes;
 use omarinina\domain\models\Users;
-use omarinina\infrastructure\models\forms\AdCreateForm;
 use omarinina\infrastructure\models\forms\CommentCreateForm;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
@@ -27,7 +24,11 @@ $currentUser = Yii::$app->user->identity;
         <h1 class="visually-hidden">Карточка объявления</h1>
         <div class="ticket__content">
             <div class="ticket__img">
-                <img src="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>" srcset="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>" alt="Изображение товара">
+                <img
+                        src="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>"
+                        srcset="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>"
+                        alt="Изображение товара"
+                >
             </div>
             <div class="ticket__info">
                 <h2 class="ticket__title"><?= $currentAd->name ?></h2>
@@ -53,8 +54,10 @@ $currentUser = Yii::$app->user->identity;
                     </p>
                 </div>
                 <ul class="ticket__tags">
-                    <?php foreach ($currentAd->adCategories as $category): ?>
-                    <?php $categorySrc = Yii::$app->params['categorySrc'][array_rand(Yii::$app->params['categorySrc'])] ?>
+                    <?php foreach ($currentAd->adCategories as $category) : ?>
+                        <?php
+                        $categorySrc = Yii::$app->params['categorySrc'][array_rand(Yii::$app->params['categorySrc'])]
+                        ?>
                     <li>
                         <a href="#" class="category-tile category-tile--small">
                             <span class="category-tile__image">
@@ -68,14 +71,14 @@ $currentUser = Yii::$app->user->identity;
             </div>
         </div>
         <div class="ticket__comments">
-            <?php if (Yii::$app->user->isGuest): ?>
+            <?php if (Yii::$app->user->isGuest) : ?>
             <div class="ticket__warning">
                 <p>Отправка комментариев доступна <br>только для зарегистрированных пользователей.</p>
-                <a href="sign-up.html" class="btn btn--big">Вход и регистрация</a>
+                <a href="<?= Url::to(['register/index']) ?>" class="btn btn--big">Вход и регистрация</a>
             </div>
             <?php endif; ?>
             <h2 class="ticket__subtitle">Коментарии</h2>
-            <?php if (!Yii::$app->user->isGuest): ?>
+            <?php if (!Yii::$app->user->isGuest) : ?>
             <div class="ticket__comment-form">
                 <?php $form = ActiveForm::begin([
                     'id' => CommentCreateForm::class,
@@ -91,7 +94,11 @@ $currentUser = Yii::$app->user->identity;
                 ?>
                     <div class="comment-form__header">
                         <a href="#" class="comment-form__avatar avatar">
-                            <img src="<?= $currentUser->avatarSrc ?>" srcset="<?= $currentUser->avatarSrc ?>" alt="Аватар пользователя">
+                            <img
+                                    src="<?= $currentUser->avatarSrc ?>"
+                                    srcset="<?= $currentUser->avatarSrc ?>"
+                                    alt="Аватар пользователя"
+                            >
                         </a>
                         <p class="comment-form__author">Вам слово</p>
                     </div>
@@ -110,14 +117,16 @@ $currentUser = Yii::$app->user->identity;
                 ?>
             </div>
             <?php endif; ?>
-            <?php if (!$currentAd->comments): ?>
+            <?php if (!$currentAd->comments) : ?>
                 <div class="ticket__message">
                     <p>У этой публикации еще нет ни одного комментария.</p>
                 </div>
-            <?php else: ?>
+            <?php else : ?>
                 <div class="ticket__comments-list">
                     <ul class="comments-list">
-                        <?php foreach ($currentAd->getComments()->orderBy(['createAt' => SORT_DESC])->all() as $comment) : ?>
+                        <?php
+                        foreach ($currentAd->getComments()->orderBy(['createAt' => SORT_DESC])->all() as $comment) :
+                            ?>
                             <?= CommentWidget::widget(['comment' => $comment]) ?>
                         <?php endforeach; ?>
                     </ul>
@@ -127,3 +136,38 @@ $currentUser = Yii::$app->user->identity;
         <button class="chat-button" type="button" aria-label="Открыть окно чата"></button>
     </div>
 </section>
+
+<?php $this->beginBlock('chat'); ?>
+
+<section class="chat visually-hidden">
+    <h2 class="chat__subtitle">Чат с продавцом</h2>
+    <ul class="chat__conversation">
+        <li class="chat__message">
+            <div class="chat__message-title">
+                <span class="chat__message-author">Вы</span>
+                <time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time>
+            </div>
+            <div class="chat__message-content">
+                <p>Добрый день!</p>
+                <p>Какова ширина кресла? Из какого оно материала?</p>
+            </div>
+        </li>
+        <li class="chat__message">
+            <div class="chat__message-title">
+                <span class="chat__message-author">Продавец</span>
+                <time class="chat__message-time" datetime="2021-11-18T21:21">21:21</time>
+            </div>
+            <div class="chat__message-content">
+                <p>Добрый день!</p>
+                <p>Ширина кресла 59 см, это хлопковая ткань. кресло очень удобное, и почти новое, без сколов и прочих дефектов</p>
+            </div>
+        </li>
+    </ul>
+    <form class="chat__form">
+        <label class="visually-hidden" for="chat-field">Ваше сообщение в чат</label>
+        <textarea class="chat__form-message" name="chat-message" id="chat-field" placeholder="Ваше сообщение"></textarea>
+        <button class="chat__form-button" type="submit" aria-label="Отправить сообщение в чат"></button>
+    </form>
+</section>
+
+<?php $this->endBlock(); ?>
