@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use Kreait\Firebase\Contract\Database;
+use omarinina\application\services\realtimeDatabase\RealtimeDatabaseInitializeService;
 use omarinina\application\factories\ad\dto\NewAdDto;
 use omarinina\application\factories\ad\dto\NewCommentDto;
 use omarinina\application\factories\ad\interfaces\AdFactoryInterface;
 use omarinina\application\factories\ad\interfaces\CommentFactoryInterface;
 use omarinina\application\services\ad\interfaces\FilterAdsGetInterface;
-use omarinina\application\services\image\interfaces\ImageParseInterface;
 use omarinina\domain\models\ads\AdCategories;
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\ads\AdTypes;
@@ -40,6 +41,8 @@ class OffersController extends Controller
     /** @var FilterAdsGetInterface */
     private FilterAdsGetInterface $filterAds;
 
+    /** @var Database */
+    private Database $database;
 
     public function __construct(
         $id,
@@ -52,6 +55,7 @@ class OffersController extends Controller
         $this->adFactory = $adFactory;
         $this->commentFactory = $commentFactory;
         $this->filterAds = $filterAds;
+        $this->database = RealtimeDatabaseInitializeService::intializeRealtimeDatabase();
         parent::__construct($id, $module, $config);
     }
 
@@ -66,15 +70,10 @@ class OffersController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['add'],
+                'only' => ['add', 'edit', 'chat'],
                 'rules' => [
                     [
-                        'actions' => ['add'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['edit'],
+                        'actions' => ['add', 'chat'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -257,5 +256,10 @@ class OffersController extends Controller
             'types' => $types,
             'currentAd' => $currentAd
         ]);
+    }
+
+    public function actionAjaxChat()
+    {
+        
     }
 }

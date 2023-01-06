@@ -17,4 +17,5 @@ return [
     'defaultImageSrc' => '/img/blank@2x.png',
     'title' => 'Куплю Продам',
     'categoryAdsOnPage' => 8,
+    'pathToFirebaseCredentials' => '/src/infrastructure/constants/firebaseCredentials.json'
 ];

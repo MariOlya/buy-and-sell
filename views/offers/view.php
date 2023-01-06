@@ -133,11 +133,14 @@ $currentUser = Yii::$app->user->identity;
                 </div>
             <?php endif; ?>
         </div>
+        <?php if (!Yii::$app->user->isGuest) : ?>
         <button class="chat-button" type="button" aria-label="Открыть окно чата"></button>
+        <?php endif; ?>
     </div>
 </section>
 
-<?php $this->beginBlock('chat'); ?>
+<?php if (!Yii::$app->user->isGuest) : ?>
+    <?php $this->beginBlock('chat'); ?>
 
 <section class="chat visually-hidden">
     <h2 class="chat__subtitle">Чат с продавцом</h2>
@@ -170,4 +173,6 @@ $currentUser = Yii::$app->user->identity;
     </form>
 </section>
 
-<?php $this->endBlock(); ?>
+    <?php $this->endBlock(); ?>
+<?php endif; ?>
+
