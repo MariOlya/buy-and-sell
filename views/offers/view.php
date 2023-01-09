@@ -6,6 +6,7 @@ use app\widgets\CommentWidget;
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\Users;
 use omarinina\infrastructure\models\forms\CommentCreateForm;
+use omarinina\infrastructure\constants\AdConstants;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -134,7 +135,16 @@ $currentUser = Yii::$app->user->identity;
             <?php endif; ?>
         </div>
         <?php if (!Yii::$app->user->isGuest) : ?>
-        <button class="chat-button" type="button" aria-label="Открыть окно чата"></button>
+            <?php
+            echo Html::a(
+                '',
+                Url::to(['offers/ajax-chat', 'adId' => $currentAd->id]),
+                [
+                    'class'=>'chat-button',
+                    'aria-label' => 'Открыть окно чата'
+                ]
+            );
+            ?>
         <?php endif; ?>
     </div>
 </section>
@@ -143,28 +153,34 @@ $currentUser = Yii::$app->user->identity;
     <?php $this->beginBlock('chat'); ?>
 
 <section class="chat visually-hidden">
+    <?php if ((Yii::$app->user->id === $currentAd->author && $currentAd->type->name === AdConstants::TYPE_BUY) ||
+            (Yii::$app->user->id !== $currentAd->author && $currentAd->type->name === AdConstants::TYPE_SELL)
+    ) : ?>
     <h2 class="chat__subtitle">Чат с продавцом</h2>
+    <?php else : ?>
+    <h2 class="chat__subtitle">Чат с покупателем</h2>
+    <?php endif; ?>
     <ul class="chat__conversation">
-        <li class="chat__message">
-            <div class="chat__message-title">
-                <span class="chat__message-author">Вы</span>
-                <time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time>
-            </div>
-            <div class="chat__message-content">
-                <p>Добрый день!</p>
-                <p>Какова ширина кресла? Из какого оно материала?</p>
-            </div>
-        </li>
-        <li class="chat__message">
-            <div class="chat__message-title">
-                <span class="chat__message-author">Продавец</span>
-                <time class="chat__message-time" datetime="2021-11-18T21:21">21:21</time>
-            </div>
-            <div class="chat__message-content">
-                <p>Добрый день!</p>
-                <p>Ширина кресла 59 см, это хлопковая ткань. кресло очень удобное, и почти новое, без сколов и прочих дефектов</p>
-            </div>
-        </li>
+<!--        <li class="chat__message">-->
+<!--            <div class="chat__message-title">-->
+<!--                <span class="chat__message-author">Вы</span>-->
+<!--                <time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time>-->
+<!--            </div>-->
+<!--            <div class="chat__message-content">-->
+<!--                <p>Добрый день!</p>-->
+<!--                <p>Какова ширина кресла? Из какого оно материала?</p>-->
+<!--            </div>-->
+<!--        </li>-->
+<!--        <li class="chat__message">-->
+<!--            <div class="chat__message-title">-->
+<!--                <span class="chat__message-author">Продавец</span>-->
+<!--                <time class="chat__message-time" datetime="2021-11-18T21:21">21:21</time>-->
+<!--            </div>-->
+<!--            <div class="chat__message-content">-->
+<!--                <p>Добрый день!</p>-->
+<!--                <p>Ширина кресла 59 см, это хлопковая ткань. кресло очень удобное, и почти новое, без сколов и прочих дефектов</p>-->
+<!--            </div>-->
+<!--        </li>-->
     </ul>
     <form class="chat__form">
         <label class="visually-hidden" for="chat-field">Ваше сообщение в чат</label>
@@ -172,6 +188,63 @@ $currentUser = Yii::$app->user->identity;
         <button class="chat__form-button" type="submit" aria-label="Отправить сообщение в чат"></button>
     </form>
 </section>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, onChildAdded, onValue} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBj3tB5jizCHDUJXVTmshh1uvXP4NcJgps",
+            authDomain: "buy-and-sell-f8712.firebaseapp.com",
+            databaseURL: "https://buy-and-sell-f8712-default-rtdb.firebaseio.com",
+            projectId: "buy-and-sell-f8712",
+            storageBucket: "buy-and-sell-f8712.appspot.com",
+            messagingSenderId: "251137189129",
+            appId: "1:251137189129:web:0e9699b227077fb4bddfd8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        const roomChatRef = ref(database, 'ads/<?=$currentAd->id?>/rooms/2/messages');
+        onChildAdded(roomChatRef, (snapshot) => {
+            const message = snapshot.val();
+            let chat = $('.chat__conversation');
+            let currentUserId = <?=Yii::$app->user->identity->getId()?>;
+            let authorId = <?=$currentAd->author?>;
+
+            // chat.empty();
+            if (message.userId === currentUserId) {
+                chat.append('' +
+                    '<li class="chat__message">' +
+                    '<div class="chat__message-title">' +
+                    '<span class="chat__message-author">Вы</span> ' +
+                    '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                    '</div> ' +
+                    '<div class="chat__message-content">' +
+                    '<p>' + message.text + '</p>' +
+                    '</div>' +
+                    '</li>'
+                );
+            } else {
+                chat.append('' +
+                    '<li class="chat__message">' +
+                    '<div class="chat__message-title">' +
+                    '<span class="chat__message-author">Покупатель</span> ' +
+                    '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                    '</div> ' +
+                    '<div class="chat__message-content">' +
+                    '<p>' + message.text + '</p>' +
+                    '</div>' +
+                    '</li>'
+                );
+            }
+        });
+
+    </script>
 
     <?php $this->endBlock(); ?>
 <?php endif; ?>
