@@ -18,7 +18,8 @@ class RealtimeDatabaseInitializeService
         $factory = (new Factory)
             ->withServiceAccount(
                 Yii::getAlias('@app') . Yii::$app->params['pathToFirebaseCredentials']
-            );
+            )
+            ->withDatabaseUri('https://buy-and-sell-f8712-default-rtdb.firebaseio.com');
 
         return $factory->createDatabase();
     }

@@ -14,10 +14,14 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var Ads $currentAd */
 /** @var CommentCreateForm $model */
+/** @var array $authorChats */
 
 /** @var Users $currentUser */
 $currentUser = Yii::$app->user->identity;
-
+$isBuyer = (Yii::$app->user->id !== $currentAd->author && $currentAd->type->name !== AdConstants::TYPE_BUY) || (Yii::$app->user->id === $currentAd->author && $currentAd->type->name !== AdConstants::TYPE_SELL);
+if ($currentUser) {
+    $currentRefForBuyer = "ads/{$currentAd->id}/rooms/{$currentUser->id}/messages";
+}
 ?>
 
 <section class="ticket">
@@ -151,48 +155,74 @@ $currentUser = Yii::$app->user->identity;
 
 <?php if (!Yii::$app->user->isGuest) : ?>
     <?php $this->beginBlock('chat'); ?>
+<?php if ($isBuyer):?>
+    <section class="chat visually-hidden">
+        <h2 class="chat__subtitle">Чат с продавцом</h2>
+        <ul class="chat__conversation">
 
-<section class="chat visually-hidden">
-    <?php if ((Yii::$app->user->id === $currentAd->author && $currentAd->type->name === AdConstants::TYPE_BUY) ||
-            (Yii::$app->user->id !== $currentAd->author && $currentAd->type->name === AdConstants::TYPE_SELL)
-    ) : ?>
-    <h2 class="chat__subtitle">Чат с продавцом</h2>
-    <?php else : ?>
-    <h2 class="chat__subtitle">Чат с покупателем</h2>
-    <?php endif; ?>
-    <ul class="chat__conversation">
-<!--        <li class="chat__message">-->
-<!--            <div class="chat__message-title">-->
-<!--                <span class="chat__message-author">Вы</span>-->
-<!--                <time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time>-->
-<!--            </div>-->
-<!--            <div class="chat__message-content">-->
-<!--                <p>Добрый день!</p>-->
-<!--                <p>Какова ширина кресла? Из какого оно материала?</p>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--        <li class="chat__message">-->
-<!--            <div class="chat__message-title">-->
-<!--                <span class="chat__message-author">Продавец</span>-->
-<!--                <time class="chat__message-time" datetime="2021-11-18T21:21">21:21</time>-->
-<!--            </div>-->
-<!--            <div class="chat__message-content">-->
-<!--                <p>Добрый день!</p>-->
-<!--                <p>Ширина кресла 59 см, это хлопковая ткань. кресло очень удобное, и почти новое, без сколов и прочих дефектов</p>-->
-<!--            </div>-->
-<!--        </li>-->
-    </ul>
-    <form class="chat__form">
-        <label class="visually-hidden" for="chat-field">Ваше сообщение в чат</label>
-        <textarea class="chat__form-message" name="chat-message" id="chat-field" placeholder="Ваше сообщение"></textarea>
-        <button class="chat__form-button" type="submit" aria-label="Отправить сообщение в чат"></button>
-    </form>
-</section>
+        </ul>
+        <form class="chat__form" data-chat-ref="<?=$currentRefForBuyer?>">
+            <label class="visually-hidden" for="chat-field">Ваше сообщение в чат</label>
+            <textarea class="chat__form-message" name="chat-message" id="chat-field" placeholder="Ваше сообщение"></textarea>
+            <button class="chat__form-button" type="submit" aria-label="Отправить сообщение в чат"></button>
+        </form>
+    </section>
+<?php else: ?>
+    <section class="chat visually-hidden new-chat">
+        <h2 class="chat__subtitle">Чат с покупателями</h2>
+
+        <?php if (empty($authorChats)): ?>
+            <div class="new-chat__no-have-chats">
+                <p>У вас нет чатов</p>
+            </div>
+        <?php else: ?>
+            <ul class="new-chat__list">
+                <?php foreach ($authorChats as $chatId => $chat): ?>
+                    <li class="new-chat__list-item" data-chat-id="<?=$chatId?>">
+                        Чат с пользователем №<?=$chatId?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <?php if (!empty($authorChats)): ?>
+            <?php foreach ($authorChats as $chatId => $chat): ?>
+                <div class="new-chat__dialog" id="chat<?=$chatId?>" data-chat-ref="/ads/104/rooms/1/messages" data-chat-id="<?=$chatId?>">
+                    <div class="new-chat__dialog-close">
+                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             width="17px" height="17px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve" fill="#fff">
+                            <g>
+                                <g id="_x31_0_23_">
+                                    <g>
+                                        <path d="M306,0C136.992,0,0,136.992,0,306s136.992,306,306,306c168.988,0,306-137.012,306-306S475.008,0,306,0z M414.19,387.147
+                                            c7.478,7.478,7.478,19.584,0,27.043c-7.479,7.478-19.584,7.478-27.043,0l-81.032-81.033l-81.588,81.588
+                                            c-7.535,7.516-19.737,7.516-27.253,0c-7.535-7.535-7.535-19.737,0-27.254l81.587-81.587l-81.033-81.033
+                                            c-7.478-7.478-7.478-19.584,0-27.042c7.478-7.478,19.584-7.478,27.042,0l81.033,81.033l82.181-82.18
+                                            c7.535-7.535,19.736-7.535,27.253,0c7.535,7.535,7.535,19.737,0,27.253l-82.181,82.181L414.19,387.147z"/>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <h2 class="chat__subtitle">Чат с покупателям №<?=$chatId?></h2>
+                    <ul class="chat__conversation">
+
+                    </ul>
+                    <form class="chat__form" data-chat-ref="ads/<?=$currentAd->id?>/rooms/<?=$chatId?>/messages">
+                        <label class="visually-hidden" for="chat-field">Ваше сообщение в чат</label>
+                        <textarea class="chat__form-message" name="chat-message" id="chat-field" placeholder="Ваше сообщение"></textarea>
+                        <button class="chat__form-button" type="submit" aria-label="Отправить сообщение в чат"></button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php endif;  ?>
+    </section>
+<?php endif; ?>
 
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, onChildAdded, onValue, query, limitToLast} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getDatabase, ref, set, get, child, push, onChildAdded, onValue, query, limitToLast} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -213,76 +243,199 @@ $currentUser = Yii::$app->user->identity;
         let currentUserId = <?=Yii::$app->user->identity->getId()?>;
         let actualRoom;
 
-        if (authorId === currentUserId) {
-            let lastMessageDate;
+        $('.chat__form .chat__form-button').on('click', function (e) {
+           let _this = $(this);
+           let $form = _this.parent('.chat__form');
+           let chatRef = $form.attr('data-chat-ref');
+           let messageArea = $form.find('.chat__form-message');
+           let message = messageArea.val();
 
-            const roomsRef = ref(database, 'ads/<?=$currentAd->id?>/rooms');
-            onChildAdded(roomsRef, (snapshot) => {
-                const roomId = snapshot.key;
+           if (chatRef && message) {
+               $.ajax({
+                   url: '/offers/add-message-to-chat/',
+                   data: {
+                       userId: currentUserId,
+                       message: message,
+                       reference: chatRef
+                   },
+                   method: 'POST',
+               })
 
-                const roomChatRef = query(ref(database, 'ads/<?=$currentAd->id?>/rooms/' + roomId + '/messages'), limitToLast(1));
-                onValue(roomChatRef, (snapshot) => {
-                    const messages = snapshot.val();
-                    const message = Object.values(messages)[0];
-
-                    console.log(Object.keys(messages)[0]);
-                    if (message.userId !== authorId) {
-                        if (lastMessageDate && message.createAt > lastMessageDate) {
-                            lastMessageDate = message.createAt;
-                            actualRoom = roomId;
-                        } else if (!lastMessageDate) {
-                            lastMessageDate = message.createAt;
-                            actualRoom = roomId;
-                        }
-                    }
-                });
-            });
-            if (!actualRoom) {
-                const roomChatRef = query(ref(database, 'ads/<?=$currentAd->id?>/rooms/'), limitToLast(1));
-                onValue(roomChatRef, (snapshot) => {
-                    const rooms = snapshot.val();
-                    actualRoom = Object.keys(rooms)[0];
-                }
-        } else {
-            actualRoom = currentUserId;
-        }
-
-
-
-        const roomChatRef = ref(database, 'ads/<?=$currentAd->id?>/rooms/' + actualRoom + '/messages');
-        onChildAdded(roomChatRef, (snapshot) => {
-            const message = snapshot.val();
-            let chat = $('.chat__conversation');
-
-            if (message.userId === currentUserId) {
-                chat.append('' +
-                    '<li class="chat__message">' +
-                    '<div class="chat__message-title">' +
-                    '<span class="chat__message-author">Вы</span> ' +
-                    '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
-                    '</div> ' +
-                    '<div class="chat__message-content">' +
-                    '<p>' + message.text + '</p>' +
-                    '</div>' +
-                    '</li>'
-                );
-            } else {
-                chat.append('' +
-                    '<li class="chat__message">' +
-                    '<div class="chat__message-title">' +
-                    '<span class="chat__message-author">Покупатель</span> ' +
-                    '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
-                    '</div> ' +
-                    '<div class="chat__message-content">' +
-                    '<p>' + message.text + '</p>' +
-                    '</div>' +
-                    '</li>'
-                );
-            }
+               messageArea.val('');
+           }
         });
 
-    </script>
+        <?php if ($isBuyer): ?>
 
+            const roomChatRef = ref(database, '<?=$currentRefForBuyer?>');
+            onChildAdded(roomChatRef, (snapshot) => {
+                const message = snapshot.val();
+                let chat = $('.chat__conversation');
+
+                if (message.userId == currentUserId) {
+                    chat.append('' +
+                        '<li class="chat__message">' +
+                        '<div class="chat__message-title">' +
+                        '<span class="chat__message-author">Вы</span> ' +
+                        '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                        '</div> ' +
+                        '<div class="chat__message-content">' +
+                        '<p>' + message.text + '</p>' +
+                        '</div>' +
+                        '</li>'
+                    );
+                } else {
+                    chat.append('' +
+                        '<li class="chat__message">' +
+                        '<div class="chat__message-title">' +
+                        '<span class="chat__message-author">Продавец</span> ' +
+                        '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                        '</div> ' +
+                        '<div class="chat__message-content">' +
+                        '<p>' + message.text + '</p>' +
+                        '</div>' +
+                        '</li>'
+                    );
+                }
+            });
+
+        <?php else: ?>
+            <?php foreach ($authorChats as $chatId => $chat): ?>
+                onChildAdded(ref(database, '<?="ads/{$currentAd->id}/rooms/{$chatId}/messages"?>'), (snapshot) => {
+                    const message = snapshot.val();
+                    let chat = $('.chat #chat<?=$chatId?> .chat__conversation ');
+
+                    if (message.userId == currentUserId) {
+                        chat.append('' +
+                            '<li class="chat__message">' +
+                            '<div class="chat__message-title">' +
+                            '<span class="chat__message-author">Вы</span> ' +
+                            '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                            '</div> ' +
+                            '<div class="chat__message-content">' +
+                            '<p>' + message.text + '</p>' +
+                            '</div>' +
+                            '</li>'
+                        );
+                    } else {
+                        chat.append('' +
+                            '<li class="chat__message">' +
+                            '<div class="chat__message-title">' +
+                            '<span class="chat__message-author">Покупатель</span> ' +
+                            '<time class="chat__message-time" datetime="2021-11-18T21:15">21:15</time> ' +
+                            '</div> ' +
+                            '<div class="chat__message-content">' +
+                            '<p>' + message.text + '</p>' +
+                            '</div>' +
+                            '</li>'
+                        );
+                    }
+                });
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+
+
+    </script>
     <?php $this->endBlock(); ?>
 <?php endif; ?>
+
+<style>
+
+    .new-chat {
+        width: 350px;
+        height: 450px;
+        left: calc(50% + 135px);
+        overflow: hidden;
+        padding-bottom: 40px;
+    }
+
+    .new-chat .chat__conversation {
+        height: 270px;
+    }
+
+    .new-chat .new-chat__dialog {
+        position: absolute;
+        width: 97%;
+        height: auto;
+        left: -350px;
+        background-color: #2b51a6;
+        top: 10px;
+        transition: all .15s;
+        opacity: 0;
+    }
+
+    .new-chat .new-chat__dialog.active {
+        left: 5px;
+        opacity: 1;
+    }
+
+    .new-chat__list {
+        margin: 0;
+        padding: 0;
+        height: 95%;
+        background-color: #fff;
+        overflow: scroll;
+    }
+
+    .new-chat__list-item {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-bottom: 1px solid #2b51a6;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
+        transition: all .25s;
+    }
+
+    .new-chat__list-item:hover {
+        cursor: pointer;
+        background-color: #2b51a6;
+        color: #ffffff;
+        border-color: #fff;
+    }
+
+    .new-chat__dialog-close {
+        position: absolute;
+        right: 5px;
+    }
+
+    .new-chat__dialog-close:hover {
+        cursor: pointer;
+    }
+
+    .new-chat__no-have-chats {
+        color: #fff;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+</style>
+<script type="module">
+
+    $(".new-chat__list-item").on('click', function (e) {
+        var _this = $(this);
+        let chatid = _this.attr('data-chat-id');
+        let chatIdString = "#chat" + chatid;
+
+        let $dialog = $(chatIdString);
+        if ($dialog) {
+            $dialog.addClass('active');
+        }
+    });
+
+    $(".new-chat__dialog-close").on('click', function (e) {
+        let _this = $(this);
+        let parent = _this.parent('.new-chat__dialog');
+
+        if (parent && parent.hasClass('active')) {
+            parent.removeClass('active');
+        }
+    });
+
+</script>
 
