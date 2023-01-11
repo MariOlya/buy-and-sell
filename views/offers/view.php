@@ -192,7 +192,7 @@ $currentUser = Yii::$app->user->identity;
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, onChildAdded, onValue} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getDatabase, ref, onChildAdded, onValue, query, limitToLast} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -209,14 +209,51 @@ $currentUser = Yii::$app->user->identity;
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        const roomChatRef = ref(database, 'ads/<?=$currentAd->id?>/rooms/2/messages');
+        let authorId = <?=$currentAd->author?>;
+        let currentUserId = <?=Yii::$app->user->identity->getId()?>;
+        let actualRoom;
+
+        if (authorId === currentUserId) {
+            let lastMessageDate;
+
+            const roomsRef = ref(database, 'ads/<?=$currentAd->id?>/rooms');
+            onChildAdded(roomsRef, (snapshot) => {
+                const roomId = snapshot.key;
+
+                const roomChatRef = query(ref(database, 'ads/<?=$currentAd->id?>/rooms/' + roomId + '/messages'), limitToLast(1));
+                onValue(roomChatRef, (snapshot) => {
+                    const messages = snapshot.val();
+                    const message = Object.values(messages)[0];
+
+                    console.log(Object.keys(messages)[0]);
+                    if (message.userId !== authorId) {
+                        if (lastMessageDate && message.createAt > lastMessageDate) {
+                            lastMessageDate = message.createAt;
+                            actualRoom = roomId;
+                        } else if (!lastMessageDate) {
+                            lastMessageDate = message.createAt;
+                            actualRoom = roomId;
+                        }
+                    }
+                });
+            });
+            if (!actualRoom) {
+                const roomChatRef = query(ref(database, 'ads/<?=$currentAd->id?>/rooms/'), limitToLast(1));
+                onValue(roomChatRef, (snapshot) => {
+                    const rooms = snapshot.val();
+                    actualRoom = Object.keys(rooms)[0];
+                }
+        } else {
+            actualRoom = currentUserId;
+        }
+
+
+
+        const roomChatRef = ref(database, 'ads/<?=$currentAd->id?>/rooms/' + actualRoom + '/messages');
         onChildAdded(roomChatRef, (snapshot) => {
             const message = snapshot.val();
             let chat = $('.chat__conversation');
-            let currentUserId = <?=Yii::$app->user->identity->getId()?>;
-            let authorId = <?=$currentAd->author?>;
 
-            // chat.empty();
             if (message.userId === currentUserId) {
                 chat.append('' +
                     '<li class="chat__message">' +

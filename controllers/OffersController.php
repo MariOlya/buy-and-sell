@@ -258,8 +258,37 @@ class OffersController extends Controller
         ]);
     }
 
-    public function actionAjaxChat()
+    public function actionAjaxChat(int $adId)
     {
-        
+        $currentAd = $this->findModel($adId);
+        $currentUser = Yii::$app->user->id;
+
+        if ($currentUser === $currentAd->author) {
+            $pathCurrentRooms = 'ads/' . $adId . '/rooms';
+            $reference = $this->database->getReference($pathCurrentRooms);
+            $rooms = $reference->getValue() ?? [];
+            $chatRoom = null;
+            foreach ($rooms as $room) {
+                $chatRoomValue = json_decode((string)$room, false, 512, JSON_THROW_ON_ERROR);
+                $lastMessage = end($chatRoomValue);
+                if ($currentAd->author !== $lastMessage->userId) {
+                    if ($chatRoom) {
+                        if (end($chatRoom)->createAt < $lastMessage->createAt) {
+                            $chatRoom = $chatRoomValue;
+                        }
+                    } else {
+                        $chatRoom = $chatRoomValue;
+                    }
+                }
+            }
+        } else {
+            $pathCurrentRoom = 'ads/' . $adId . '/rooms/' . $currentUser . '/';
+            $reference = $this->database->getReference($pathCurrentRoom);
+            $value = $reference->getValue();
+            if ($value) {
+                $chatRoom = json_decode((string)$value, false, 512, JSON_THROW_ON_ERROR);
+            }
+        }
+
     }
 }
