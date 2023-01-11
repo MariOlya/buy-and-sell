@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use Kreait\Firebase\Contract\Database;
+use Kreait\Firebase\Exception\DatabaseException;
 use omarinina\application\services\realtimeDatabase\RealtimeDatabaseInitializeService;
 use omarinina\application\factories\ad\dto\NewAdDto;
 use omarinina\application\factories\ad\dto\NewCommentDto;
@@ -24,6 +25,7 @@ use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\di\NotInstantiableException;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -156,6 +158,8 @@ class OffersController extends Controller
 
         $commentForm = new CommentCreateForm();
         $currentUser = Yii::$app->user->id;
+        $isAuthor = $currentUser === $currentAd->author;
+        $referenceAuthor = "ads/{$currentAd->id}/rooms";
 
         if (Yii::$app->request->getIsPost()) {
             $commentForm->load(Yii::$app->request->post());
@@ -171,7 +175,8 @@ class OffersController extends Controller
 
         return $this->render('view', [
             'currentAd' => $currentAd,
-            'model' => $commentForm
+            'model' => $commentForm,
+            'authorChats' => $isAuthor ? $this->getChatsForAuthor($referenceAuthor) : []
         ]);
     }
 
@@ -289,6 +294,30 @@ class OffersController extends Controller
                 $chatRoom = json_decode((string)$value, false, 512, JSON_THROW_ON_ERROR);
             }
         }
+    }
 
+    public function actionAddMessageToChat(): void
+    {
+        $request = Yii::$app->request;
+        $message = $request->post('message', $request->get('message'));
+        $chatRef = $request->post('reference', $request->get('reference'));
+        $userId = $request->post('userId', $request->get('userId'));
+
+        if ($message && $chatRef) {
+            $this->database->getReference($chatRef)->push([
+                'userId' => $userId,
+                'text' => $message
+            ]);
+        }
+    }
+
+    /**
+     * @param string $reference
+     * @return array
+     * @throws DatabaseException
+     */
+    protected function getChatsForAuthor(string $reference): array
+    {
+        return $this->database->getReference($reference)->getValue() ?? [];
     }
 }
