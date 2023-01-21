@@ -55,7 +55,9 @@ class FilterAdsGetService implements FilterAdsGetInterface
     {
         return $user
             ->getAds()
-            ->joinWith(['comments'])
+            ->joinWith(['comments' => function (ActiveQuery $query) {
+                $query->with(['authorUser']);
+            }])
             ->groupBy(['ads.id'])
             ->having('MAX(comments.id) > 0')
             ->orderBy(['MAX(comments.createAt)' => SORT_DESC])

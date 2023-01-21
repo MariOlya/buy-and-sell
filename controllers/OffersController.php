@@ -109,7 +109,7 @@ class OffersController extends Controller
         /** @var Ads $model */
         $model = Ads::find()
             ->where(['id' => $id])
-            ->with('images', 'adsToCategories', 'adsToImages')
+            ->with('images', 'adsToCategories', 'adsToImages', 'comments')
             ->one();
 
         if ($model === null) {
@@ -167,7 +167,7 @@ class OffersController extends Controller
     public function actionView(int $id): string|Response
     {
         $currentAd = $this->findModel($id);
-        $comments = $currentAd->getComments()->orderBy(['createAt' => SORT_DESC])->all();
+        $comments = $currentAd->getComments()->with(['authorUser'])->orderBy(['createAt' => SORT_DESC])->all();
 
         $commentForm = new CommentCreateForm();
         $currentUser = Yii::$app->user->id;
