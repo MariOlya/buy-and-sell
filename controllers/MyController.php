@@ -12,6 +12,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
+/** This controller works with personal ads so all actions without additional comments for ads */
 class MyController extends SecurityController
 {
     /** @var FilterAdsGetInterface */
