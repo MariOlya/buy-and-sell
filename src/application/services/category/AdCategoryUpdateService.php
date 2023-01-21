@@ -28,12 +28,14 @@ class AdCategoryUpdateService implements AdCategoryUpdateInterface
 
             if ($outdatedCategories) {
                 Yii::$app->db->transaction(function () use ($outdatedCategories, $adId) {
-                    foreach ($outdatedCategories as $categoryId) {
-                        /** @var AdsToCategories $category */
-                        $category = AdsToCategories::find()
-                            ->where(['categoryId' => $categoryId])
-                            ->andWhere(['adId' => $adId])
-                            ->one();
+
+                    $deletedCategories = AdsToCategories::find()
+                        ->where(['categoryId' => $outdatedCategories])
+                        ->andWhere(['adId' => $adId])
+                        ->all();
+
+                    /** @var AdsToCategories $category */
+                    foreach ($deletedCategories as $category) {
                         $category->deleteCategory();
                     }
                 });
@@ -42,10 +44,10 @@ class AdCategoryUpdateService implements AdCategoryUpdateInterface
             if ($updatedCategories) {
                 Yii::$app->db->transaction(function () use ($updatedCategories, $adId) {
                     foreach ($updatedCategories as $categoryId) {
-                        $newExecutorCategory = new AdsToCategories();
-                        $newExecutorCategory->categoryId = (int)$categoryId;
-                        $newExecutorCategory->adId = $adId;
-                        $newExecutorCategory->save(false);
+                        $newAdCategory = new AdsToCategories();
+                        $newAdCategory->categoryId = (int)$categoryId;
+                        $newAdCategory->adId = $adId;
+                        $newAdCategory->save(false);
                     }
                 });
             }
