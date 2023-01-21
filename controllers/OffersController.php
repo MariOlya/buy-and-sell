@@ -7,6 +7,8 @@ namespace app\controllers;
 use DateTime;
 use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Exception\DatabaseException;
+use omarinina\application\services\mail\dto\ChatMessageMailDto;
+use omarinina\application\services\mail\MailSendService;
 use omarinina\application\services\realtimeDatabase\RealtimeDatabaseInitializeService;
 use omarinina\application\factories\ad\dto\NewAdDto;
 use omarinina\application\factories\ad\dto\NewCommentDto;
@@ -317,16 +319,12 @@ class OffersController extends Controller
 
         $currentUser = Users::findOne($currentUserId);
 
-        Yii::$app->mailer->compose('chatmessage', [
-            'currentAd' => $currentAd,
-            'sender' => $currentUser,
-            'time' => $currentTime,
-            'message' => $message,
-            'html' => 'layouts/html'
-        ])
-            ->setFrom(Yii::$app->params['senderEmail'])
-            ->setTo($receiver->email)
-            ->setSubject(MailConstants::CHAT_HEADER)
-            ->send();
+        MailSendService::sendChatMessageMail(new ChatMessageMailDto(
+            $currentAd,
+            $currentUser,
+            $currentTime,
+            $message,
+            $receiver->email
+        ));
     }
 }
