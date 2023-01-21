@@ -17,6 +17,7 @@ use omarinina\domain\models\ads\AdCategories;
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\ads\AdTypes;
 use omarinina\domain\models\Users;
+use omarinina\infrastructure\constants\MailConstants;
 use omarinina\infrastructure\models\forms\AdCreateForm;
 use omarinina\infrastructure\models\forms\AdEditForm;
 use omarinina\infrastructure\models\forms\CommentCreateForm;
@@ -158,15 +159,13 @@ class OffersController extends Controller
     /**
      * @param int $id
      * @return string|Response
+     * @throws DatabaseException
      * @throws NotFoundHttpException
      */
     public function actionView(int $id): string|Response
     {
-        $currentAd = Ads::findOne($id);
-
-        if (!$currentAd) {
-            throw new NotFoundHttpException('Ad is not found', 404);
-        }
+        $currentAd = $this->findModel($id);
+        $comments = $currentAd->getComments()->orderBy(['createAt' => SORT_DESC])->all();
 
         $commentForm = new CommentCreateForm();
         $currentUser = Yii::$app->user->id;
@@ -189,6 +188,7 @@ class OffersController extends Controller
         return $this->render('view', [
             'currentAd' => $currentAd,
             'model' => $commentForm,
+            'comments' => $comments,
             'authorChats' => $isAuthor ? $this->getChatsForAuthor($referenceAuthor) : []
         ]);
     }
@@ -326,7 +326,7 @@ class OffersController extends Controller
         ])
             ->setFrom(Yii::$app->params['senderEmail'])
             ->setTo($receiver->email)
-            ->setSubject('У вас новое сообщение в чате')
+            ->setSubject(MailConstants::CHAT_HEADER)
             ->send();
     }
 }

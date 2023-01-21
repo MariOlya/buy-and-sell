@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use app\widgets\CommentWidget;
 use omarinina\domain\models\ads\Ads;
+use omarinina\domain\models\ads\Comments;
 use omarinina\domain\models\Users;
 use omarinina\infrastructure\models\forms\CommentCreateForm;
 use omarinina\infrastructure\constants\AdConstants;
@@ -15,6 +16,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var Ads $currentAd */
 /** @var CommentCreateForm $model */
+/** @var Comments $comments */
 /** @var array $authorChats */
 
 /** @var Users $currentUser */
@@ -127,7 +129,7 @@ if ($currentUser && $isNotAuthor) {
                 ?>
             </div>
             <?php endif; ?>
-            <?php if (!$currentAd->comments) : ?>
+            <?php if (!$comments) : ?>
                 <div class="ticket__message">
                     <p>У этой публикации еще нет ни одного комментария.</p>
                 </div>
@@ -135,7 +137,7 @@ if ($currentUser && $isNotAuthor) {
                 <div class="ticket__comments-list">
                     <ul class="comments-list">
                         <?php
-                        foreach ($currentAd->getComments()->orderBy(['createAt' => SORT_DESC])->all() as $comment) :
+                        foreach ($comments as $comment) :
                             ?>
                             <?= CommentWidget::widget(['comment' => $comment]) ?>
                         <?php endforeach; ?>
