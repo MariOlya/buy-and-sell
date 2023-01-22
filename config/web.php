@@ -22,6 +22,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
         'log',
+        'emailQueue',
         Bootstrap::class
     ],
     'homeUrl' => ['/'],
