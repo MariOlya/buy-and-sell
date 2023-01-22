@@ -3,6 +3,7 @@
 use yii\queue\amqp_interop\Queue;
 use yii\queue\LogBehavior;
 use yii\sphinx\Connection;
+use yii\symfonymailer\Mailer;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -18,6 +19,19 @@ $config = [
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'urlManager' => [
+            'baseUrl' => 'http://localhost:8000',
+            'scriptUrl' => 'http://localhost:8000'
+        ],
+        'mailer' => [
+            'class' => Mailer::class,
+            'viewPath' => '@app/mail',
+            // send all mails to a file by default.
+            'useFileTransport' => false,
+            'transport' => [
+                'dsn' => 'smtp://mailhog:1025'
+            ]
+        ],
         'sphinx' => [
             'class' => Connection::class,
             'dsn' => 'mysql:host=127.0.0.1;port=9306;dbname=buyAndSell',
@@ -31,7 +45,7 @@ $config = [
             'attempts' => 1,
             'queueName' => 'email-queue',
             'exchangeName' => 'email-queue',
-            'driver' => Queue::ENQUEUE_AMQP_LIB,
+            'driver' => Queue::ENQUEUE_AMQP_BUNNY,
             'dsn' => "amqp://root:root@rabbit:5672",
             'connectionTimeout' => 60,
             'heartbeat' => 60,
