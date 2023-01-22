@@ -3,6 +3,8 @@
 use yii\authclient\clients\VKontakte;
 use yii\authclient\Collection;
 use wapmorgan\yii2inflection\Inflection;
+use yii\queue\amqp_interop\Queue;
+use yii\queue\LogBehavior;
 use yii\sphinx\Connection;
 use yii\debug\panels\DbPanel;
 use yii\debug\Module;
@@ -46,6 +48,19 @@ $config = [
         ],
         'inflection' => [
             'class' => Inflection::class
+        ],
+        'emailQueue' => [
+            'class' => Queue::class,
+            'as log' => LogBehavior::class,
+            'ttr' => 3 * 60,
+            'attempts' => 1,
+            'queueName' => 'email-queue',
+            'exchangeName' => 'email-queue',
+            'driver' => Queue::ENQUEUE_AMQP_LIB,
+            'dsn' => "amqp://root:root@rabbit:5672",
+            'connectionTimeout' => 60,
+            'heartbeat' => 60,
+            'vhost' => '/'
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
