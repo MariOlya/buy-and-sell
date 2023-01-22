@@ -57,11 +57,12 @@ $config = [
             'attempts' => 1,
             'queueName' => 'email-queue',
             'exchangeName' => 'email-queue',
-            'driver' => Queue::ENQUEUE_AMQP_LIB,
+            'driver' => Queue::ENQUEUE_AMQP_BUNNY,
             'dsn' => "amqp://root:root@rabbit:5672",
             'connectionTimeout' => 60,
             'heartbeat' => 60,
-            'vhost' => '/'
+            'vhost' => '/',
+            'routingKey' => ''
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

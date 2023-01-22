@@ -35,7 +35,8 @@ $config = [
             'dsn' => "amqp://root:root@rabbit:5672",
             'connectionTimeout' => 60,
             'heartbeat' => 60,
-            'vhost' => '/'
+            'vhost' => '/',
+            'routingKey' => ''
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

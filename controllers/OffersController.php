@@ -8,7 +8,6 @@ use DateTime;
 use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Exception\DatabaseException;
 use omarinina\application\services\mail\dto\ChatMessageMailDto;
-use omarinina\application\services\mail\MailSendService;
 use omarinina\application\services\realtimeDatabase\RealtimeDatabaseInitializeService;
 use omarinina\application\factories\ad\dto\NewAdDto;
 use omarinina\application\factories\ad\dto\NewCommentDto;
@@ -19,7 +18,7 @@ use omarinina\domain\models\ads\AdCategories;
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\ads\AdTypes;
 use omarinina\domain\models\Users;
-use omarinina\infrastructure\constants\MailConstants;
+use omarinina\infrastructure\jobs\ChatMessageMailJob;
 use omarinina\infrastructure\models\forms\AdCreateForm;
 use omarinina\infrastructure\models\forms\AdEditForm;
 use omarinina\infrastructure\models\forms\CommentCreateForm;
@@ -35,7 +34,6 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
-use yii\mail\BaseMailer;
 
 class OffersController extends Controller
 {
@@ -319,12 +317,13 @@ class OffersController extends Controller
 
         $currentUser = Users::findOne($currentUserId);
 
-        MailSendService::sendChatMessageMail(new ChatMessageMailDto(
+        $emailJob = new ChatMessageMailJob(new ChatMessageMailDto(
             $currentAd,
             $currentUser,
             $currentTime,
             $message,
             $receiver->email
         ));
+        Yii::$app->emailQueue->push($emailJob);
     }
 }
