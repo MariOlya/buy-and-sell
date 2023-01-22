@@ -152,9 +152,11 @@ class Ads extends ActiveRecord
      */
     public function getFirstImage() : ?string
     {
-        return array_key_exists(0, $this->images) ?
-            $this->images[0]->imageSrc :
-            null;
+        $images = $this->images ?? [];
+        if (!empty($images)) {
+            return array_pop($images)->imageSrc;
+        }
+        return null;
     }
 
     /**

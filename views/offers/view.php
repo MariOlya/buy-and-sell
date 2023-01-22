@@ -37,8 +37,8 @@ if ($currentUser && $isNotAuthor) {
         <div class="ticket__content">
             <div class="ticket__img">
                 <img
-                        src="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>"
-                        srcset="<?= $currentAd->images[0]->imageSrc ?? Yii::$app->params['defaultImageSrc'] ?>"
+                        src="<?= $currentAd->getFirstImage() ?? Yii::$app->params['defaultImageSrc'] ?>"
+                        srcset="<?= $currentAd->getFirstImage() ?? Yii::$app->params['defaultImageSrc'] ?>"
                         alt="Изображение товара"
                 >
             </div>

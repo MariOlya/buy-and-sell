@@ -5,6 +5,7 @@ declare(strict_types=1);
 /** @var Ads $ad */
 
 use omarinina\domain\models\ads\AdCategories;
+use omarinina\domain\models\ads\AdsToImages;
 use omarinina\domain\models\ads\Images;
 use omarinina\domain\models\ads\Ads;
 use yii\helpers\Html;
@@ -14,7 +15,10 @@ if (is_array($ad)) {
     /** @var AdCategories[] $categories */
     $categories = AdCategories::find()->where(['id' => $ad['categories']])->all();
     if ($ad['images']) {
-        $image = Images::findOne($ad['images'][0]);
+        $images = explode(',', $ad['images']);
+        $imageId = (int)array_pop($images);
+        /** @var Images $image */
+        $image = Images::findOne($imageId);
     }
 }
 
