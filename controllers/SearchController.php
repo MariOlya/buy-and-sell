@@ -6,7 +6,6 @@ use omarinina\application\services\ad\interfaces\FilterAdsGetInterface;
 use omarinina\infrastructure\models\forms\SearchForm;
 use Yii;
 use yii\web\Controller;
-use yii\sphinx\Query;
 
 class SearchController extends Controller
 {

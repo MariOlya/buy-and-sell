@@ -5,7 +5,6 @@ declare(strict_types=1);
 /** @var Ads $ad */
 
 use omarinina\domain\models\ads\AdCategories;
-use omarinina\domain\models\ads\AdsToImages;
 use omarinina\domain\models\ads\Images;
 use omarinina\domain\models\ads\Ads;
 use yii\helpers\Html;

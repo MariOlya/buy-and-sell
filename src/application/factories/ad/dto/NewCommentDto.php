@@ -12,7 +12,6 @@ class NewCommentDto
         public readonly CommentCreateForm $form,
         public readonly int $author,
         public readonly int $adId
-    )
-    {
+    ) {
     }
 }

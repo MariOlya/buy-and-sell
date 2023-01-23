@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\application\factories\user\dto;
 
 use omarinina\infrastructure\models\forms\RegistrationForm;

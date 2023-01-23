@@ -42,7 +42,7 @@ class LoginForm extends Model
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
     private function isExistEmail(): bool
     {
@@ -70,8 +70,7 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute): void
     {
-        if (
-            $this->isExistEmail() &&
+        if ($this->isExistEmail() &&
             !Yii::$app->security->validatePassword($this->password, $this->getUser()->password)
         ) {
             $this->addError($attribute, 'Неправильный пароль');

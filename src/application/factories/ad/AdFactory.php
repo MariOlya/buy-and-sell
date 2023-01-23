@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\application\factories\ad;
 
 use omarinina\application\factories\ad\dto\NewAdDto;

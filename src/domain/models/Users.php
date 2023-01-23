@@ -108,7 +108,7 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param int $vkId
+     * @param string $vkId
      * @return bool
      */
     public function addVkId(string $vkId): bool

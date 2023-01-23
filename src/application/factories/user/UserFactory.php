@@ -10,9 +10,7 @@ use omarinina\application\services\image\interfaces\ImageParseInterface;
 use omarinina\domain\models\Users;
 use Yii;
 use yii\base\Exception;
-use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
-use yii\web\UploadedFile;
 
 class UserFactory implements UserFactoryInterface
 {

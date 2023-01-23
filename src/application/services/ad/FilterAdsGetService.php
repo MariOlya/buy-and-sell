@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\application\services\ad;
 
 use omarinina\application\services\ad\interfaces\FilterAdsGetInterface;

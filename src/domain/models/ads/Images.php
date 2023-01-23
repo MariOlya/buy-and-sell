@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\domain\models\ads;
 
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\db\StaleObjectException;
 
 /**
  * This is the model class for table "images".
@@ -72,7 +74,7 @@ class Images extends \yii\db\ActiveRecord
     /**
      * @return void
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function deleteImage(): void
     {

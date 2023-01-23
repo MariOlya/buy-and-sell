@@ -67,6 +67,6 @@ class AdCreateForm extends Model
                 $this->categories
             )) {
                 $this->addError($attribute, 'Выбранной категории(й) не существует');
-            }
+        }
     }
 }

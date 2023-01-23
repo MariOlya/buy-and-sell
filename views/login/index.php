@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
             'errorOptions' => ['tag' => 'span', 'class' => 'error__list', 'style' => 'display: flex']
         ]
     ])
-    ?>
+?>
         <div class="login__title">
             <?php echo Html::a('Регистрация', Url::to(['register/index']), ['class'=>'login__link']) ?>
             <h2>Вход</h2>

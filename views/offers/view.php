@@ -71,7 +71,10 @@ if ($currentUser && $isNotAuthor) {
                         $categorySrc = Yii::$app->params['categorySrc'][array_rand(Yii::$app->params['categorySrc'])]
                         ?>
                     <li>
-                        <a href="#" class="category-tile category-tile--small">
+                        <a
+                                href="<?= Url::to(['offers/category', 'categoryId' => $category->id]) ?>"
+                                class="category-tile category-tile--small"
+                        >
                             <span class="category-tile__image">
                               <img src="<?= $categorySrc ?>" srcset="<?= $categorySrc ?> 2x" alt="Иконка категории">
                             </span>

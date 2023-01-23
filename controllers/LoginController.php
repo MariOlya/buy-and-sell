@@ -7,7 +7,6 @@ namespace app\controllers;
 use omarinina\infrastructure\models\forms\LoginForm;
 use Yii;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class LoginController extends Controller

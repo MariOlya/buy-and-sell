@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\infrastructure\models\forms;
 
 use omarinina\domain\models\Users;
@@ -47,7 +49,7 @@ class RegistrationForm extends Model
             'email' => 'Эл. почта',
             'password' => 'Пароль',
             'repeatedPassword' => 'Пароль еще раз',
-            'avatar' => ''
+            'avatar' => 'Аватар'
         ];
     }
 }

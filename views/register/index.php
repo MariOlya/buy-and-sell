@@ -13,9 +13,6 @@ use yii\helpers\Url;
 /** @var RegistrationForm|RegistrationVkForm $model */
 /** @var null|array $userData */
 
-//var_dump($userData);
-//die();
-
 if (!$userData) {
     $formName = RegistrationForm::class;
     $avatar = null;

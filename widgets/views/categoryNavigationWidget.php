@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use omarinina\domain\models\ads\AdCategories;
+use yii\base\InvalidConfigException;
 use yii\widgets\Menu;
-use yii\helpers\Url;
 
 /** @var AdCategories[] $categories */
 
 /**
  * @param AdCategories[] $categories
  * @return array
- * @throws \yii\base\InvalidConfigException
+ * @throws InvalidConfigException
  */
 function getCategoryItems(array $categories):array
 {

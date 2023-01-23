@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 /** @var yii\web\View $this */
 /** @var Ads[] $adsWithComments */
-//
-//echo ('<pre>');
-//var_dump($adsWithComments);
-//die();
 
 use omarinina\domain\models\ads\Ads;
 use yii\helpers\Html;

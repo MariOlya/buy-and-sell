@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\infrastructure\models\forms;
 
 use yii\base\Model;

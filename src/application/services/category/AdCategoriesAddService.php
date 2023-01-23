@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace omarinina\application\services\category;
 
 use omarinina\application\services\category\interfaces\AdCategoriesAddInterface;
 use omarinina\domain\models\ads\AdsToCategories;
-use Yii;
 
 class AdCategoriesAddService implements AdCategoriesAddInterface
 {

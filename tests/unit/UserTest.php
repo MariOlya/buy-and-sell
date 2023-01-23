@@ -5,14 +5,8 @@ declare(strict_types=1);
 namespace unit;
 
 use Mockery;
-use omarinina\application\factories\user\dto\NewUserDto;
-use omarinina\application\factories\user\UserFactory;
-use omarinina\application\services\image\interfaces\ImageParseInterface;
 use omarinina\domain\models\Users;
-use omarinina\infrastructure\models\forms\RegistrationForm;
-use Yii;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
 
 class UserTest extends \Codeception\Test\Unit
 {
