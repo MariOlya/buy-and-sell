@@ -89,6 +89,15 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                         alt="Аватар пользователя"
                 >
             </a>
+            <div class="logout-item">
+                <?php
+                echo Html::a(
+                    'Выход',
+                    Url::to(['site/logout']),
+                    ['class'=>'header__input', 'style' => 'display:flex']
+                );
+                ?>
+            </div>
         <?php endif; ?>
         <?php if (Yii::$app->user->isGuest) : ?>
             <?php

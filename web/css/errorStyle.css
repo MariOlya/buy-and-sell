@@ -115,3 +115,19 @@
     align-items: center;
 }
 
+
+.header--logged .header__logo {
+    margin-right: 35px;
+}
+
+.header__list {
+    justify-content: space-around;
+}
+
+.header__user-menu {
+    margin-right: 25px;;
+}
+
+.logout-item {
+    margin-left: 20px;
+}
