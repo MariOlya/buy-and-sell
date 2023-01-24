@@ -5,7 +5,7 @@
  * @var $index integer
  */
 return [
-    'name' => $faker->name(),
+    'name' => $faker->realTextBetween(10, 100),
     'typeId' => $faker->numberBetween(1, 2),
     'description' => $faker->realTextBetween(50, 1000),
     'author' => $faker->numberBetween(1, 10),

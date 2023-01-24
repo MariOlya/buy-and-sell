@@ -8,7 +8,7 @@ return [
     'name' => $faker->name(),
     'lastName' => $faker->lastName(),
     'email' => $faker->email(),
-    'password' => $faker->password(),
+    'password' => Yii::$app->getSecurity()->generatePasswordHash('123456'),
     'avatarSrc' => $faker->randomElement([
         '/img/avatar01.jpg',
         '/img/avatar02.jpg',
