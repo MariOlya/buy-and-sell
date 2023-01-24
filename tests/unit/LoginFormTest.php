@@ -30,7 +30,7 @@ class LoginFormTest extends \Codeception\Test\Unit
     public function testLoginWrongPassword()
     {
         $this->model = new LoginForm([
-            'email' => 'omarinina@xiag.ch',
+            'email' => 'rylan.bins@mann.com',
             'password' => 'wrong_password',
         ]);
 
@@ -42,8 +42,8 @@ class LoginFormTest extends \Codeception\Test\Unit
     public function testLoginCorrect()
     {
         $this->model = new LoginForm([
-            'email' => 'nikita@xiag.ch',
-            'password' => 'testtest',
+            'email' => 'rylan.bins@mann.com',
+            'password' => '123456',
         ]);
 
         $this->assertTrue($this->model->login());

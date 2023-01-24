@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\ads\Comments;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "users".
@@ -113,6 +114,9 @@ class Users extends ActiveRecord implements IdentityInterface
      */
     public function addVkId(string $vkId): bool
     {
+        if ($this->vkId) {
+            throw new NotFoundHttpException('You have already registration with VK', 403);
+        }
         $this->vkId = (int)$vkId;
         return $this->save(false);
     }

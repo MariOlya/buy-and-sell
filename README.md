@@ -51,10 +51,10 @@ DIRECTORY STRUCTURE
       migrations/         contains migrations to create current tables for DB
       runtime/            contains files generated during runtime
       src/                contains classes (domain, infrustacture, application)
-        application/      contains classes for services
-        domain/           contains models of main entities and helpers (traits, task actions)
-        infrastructure/   contains helped models (forms) and constants
-      tests/              contains various tests for the basic application (just unit)
+        application/      contains classes for factories, services of internal work
+        domain/           contains models of main entities
+        infrastructure/   contains helped models (forms), constants, jobs for queues and services of external work
+      tests/              contains various tests for the basic application
       vendor/             contains dependent 3rd-party packages
       views/              contains view files for the Web application
       web/                contains the entry script and Web resources
@@ -70,6 +70,9 @@ We work on this project with docker-compose.
 **Images**:
 * yiisoftware/yii2-php:8.1-apache
 * mysql:8.0.31
+* sphinx:latest
+* mailhog/mailhog
+* rabbitmq:3-management
 
 You can then access the application locally through the following URL:
 
@@ -148,11 +151,21 @@ If you have already started your another containers, start docker containers wit
    
 If your containers haven't started yet please before start containers without sphinx. It needs to have connection to DB before starting.
 
+Please, control the actual indexes. You can update these with
+
+```
+docker exec -it <nameOfYourSphinxContainer> indexer --config /etc/sphinxsearch/sphinx.conf  --rotate --all
+```
+
 ### Check mail-sending with Mailhog
 
 We need to send mails to user who has new message in chat of some ad
 
 Just open `127.0.0.1:8025` and send any message in any chat and see result.
+
+### Work with RabbitMQ
+
+If you want to follow queues on RabbitMQ client you need to go `127.0.0.1:15672` with user and password from docker-compose config.
 
 
 
@@ -168,7 +181,11 @@ Unit tests can be executed by running
 vendor/bin/codecept run unit
 ```
 
-The command above will execute unit. Unit tests are testing the system components.
+Functional tests can be executed by running
+
+```
+vendor/bin/codecept run functional
+```
 
 
 ### Code coverage support

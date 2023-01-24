@@ -1,7 +1,5 @@
 <?php
 
-use omarinina\infrastructure\models\forms\LoginForm;
-
 class LoginFormCest
 {
     public function _before(FunctionalTester $I)
@@ -23,7 +21,7 @@ class LoginFormCest
     public function loginWithWrongCredentials(\FunctionalTester $I): void
     {
         $I->submitForm('#omarinina\infrastructure\models\forms\LoginForm', [
-            'LoginForm[email]' => 'omarinina@xiag.ch',
+            'LoginForm[email]' => 'rylan.bins@mann.com',
             'LoginForm[password]' => 'wrong',
         ]);
         $I->expectTo('see validations errors');
@@ -33,8 +31,8 @@ class LoginFormCest
     public function loginSuccessfully(\FunctionalTester $I): void
     {
         $I->submitForm('#omarinina\infrastructure\models\forms\LoginForm', [
-            'LoginForm[email]' => 'nikita@xiag.ch',
-            'LoginForm[password]' => 'testtest',
+            'LoginForm[email]' => 'rylan.bins@mann.com',
+            'LoginForm[password]' => '123456',
         ]);
         $I->seeCurrentUrlEquals('/index-test.php');
     }

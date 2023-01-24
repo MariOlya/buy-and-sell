@@ -1,4 +1,10 @@
 <?php
+
+use omarinina\infrastructure\constants\KeysConstants;
+use omarinina\infrastructure\modules\Bootstrap;
+use yii\authclient\clients\VKontakte;
+use yii\authclient\Collection;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/test_db.php';
 
@@ -8,12 +14,26 @@ $db = require __DIR__ . '/test_db.php';
 return [
     'id' => 'basic-tests',
     'basePath' => dirname(__DIR__),
+    'bootstrap' => [
+        'log',
+        Bootstrap::class
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'language' => 'en-US',
     'components' => [
+        'authClientCollection' => [
+            'class' => Collection::class,
+            'clients' => [
+                'vkontakte' => [
+                    'class' => VKontakte::class,
+                    'clientId' => KeysConstants::VK_CLIENT_ID,
+                    'clientSecret' => KeysConstants::VK_CLIENT_KEY,
+                ],
+            ],
+        ],
         'db' => $db,
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
