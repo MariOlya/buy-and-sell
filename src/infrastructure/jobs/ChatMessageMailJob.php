@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace omarinina\infrastructure\jobs;
 
-use omarinina\application\services\mail\dto\ChatMessageMailDto;
-use omarinina\application\services\mail\MailSendService;
+use omarinina\infrastructure\services\mail\dto\ChatMessageMailDto;
+use omarinina\infrastructure\services\mail\MailSendService;
 use yii\queue\JobInterface;
 
 class ChatMessageMailJob implements JobInterface

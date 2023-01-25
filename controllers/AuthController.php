@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use omarinina\application\services\user\interfaces\UserAuthVkInterface;
 use omarinina\domain\models\Users;
+use omarinina\infrastructure\services\user\interfaces\UserAuthVkInterface;
 use Yii;
 use yii\authclient\clients\VKontakte;
 use yii\authclient\Collection;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace omarinina\application\services\user\interfaces;
+namespace omarinina\infrastructure\services\user\interfaces;
 
 use yii\authclient\clients\VKontakte;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace omarinina\application\services\mail;
+namespace omarinina\infrastructure\services\mail;
 
 use omarinina\infrastructure\constants\MailConstants;
 use Yii;

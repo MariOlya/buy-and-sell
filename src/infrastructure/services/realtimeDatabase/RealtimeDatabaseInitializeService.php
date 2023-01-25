@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace omarinina\application\services\realtimeDatabase;
+namespace omarinina\infrastructure\services\realtimeDatabase;
 
 use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Factory;

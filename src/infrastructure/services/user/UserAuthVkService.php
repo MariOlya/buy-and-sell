@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace omarinina\application\services\user;
+namespace omarinina\infrastructure\services\user;
 
-use omarinina\application\services\user\interfaces\UserAuthVkInterface;
+use omarinina\infrastructure\services\user\interfaces\UserAuthVkInterface;
 use yii\authclient\clients\VKontakte;
 use yii\web\HttpException;
 

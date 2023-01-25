@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace omarinina\application\services\mail\dto;
+namespace omarinina\infrastructure\services\mail\dto;
 
 use omarinina\domain\models\ads\Ads;
 use omarinina\domain\models\Users;

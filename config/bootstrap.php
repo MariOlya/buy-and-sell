@@ -47,6 +47,6 @@ Yii::$container->set(
 );
 
 Yii::$container->set(
-    \omarinina\application\services\user\interfaces\UserAuthVkInterface::class,
-    \omarinina\application\services\user\UserAuthVkService::class
+    \omarinina\infrastructure\services\user\interfaces\UserAuthVkInterface::class,
+    \omarinina\infrastructure\services\user\UserAuthVkService::class
 );
