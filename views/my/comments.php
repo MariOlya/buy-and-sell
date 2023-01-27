@@ -21,9 +21,9 @@ use yii\helpers\Url;
                 <div class="comments__block">
                     <div class="comments__header">
                         <a href="<?= Url::to(['offers/view', 'id' => $ad->id]) ?>" class="announce-card">
-                            <h2 class="announce-card__title"><?= $ad->name ?></h2>
+                            <h2 class="announce-card__title"><?= Html::encode($ad->name) ?></h2>
                             <span class="announce-card__info">
-                      <span class="announce-card__price">₽ <?= $ad->price ?></span>
+                      <span class="announce-card__price">₽ <?= Html::encode($ad->price) ?></span>
                       <span class="announce-card__type"><?= $ad->type->name ?></span>
                     </span>
                         </a>
@@ -40,11 +40,11 @@ use yii\helpers\Url;
                                                     alt="Аватар пользователя">
                                         </a>
                                         <p class="comment-card__author">
-                                            <?= $comment->authorUser->name . ' ' . $comment->authorUser->lastName ?>
+                                            <?= Html::encode($comment->authorUser->name) . ' ' . Html::encode($comment->authorUser->lastName) ?>
                                         </p>
                                     </div>
                                     <div class="comment-card__content">
-                                        <p><?= $comment->text ?></p>
+                                        <p><?= Html::encode($comment->text) ?></p>
                                     </div>
                                     <?php
                                     echo Html::a(

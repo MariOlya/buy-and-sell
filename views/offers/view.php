@@ -43,13 +43,13 @@ if ($currentUser && $isNotAuthor) {
                 >
             </div>
             <div class="ticket__info">
-                <h2 class="ticket__title"><?= $currentAd->name ?></h2>
+                <h2 class="ticket__title"><?= Html::encode($currentAd->name) ?></h2>
                 <div class="ticket__header">
-                    <p class="ticket__price"><span class="js-sum"><?= $currentAd->price ?></span> ₽</p>
+                    <p class="ticket__price"><span class="js-sum"><?= Html::encode($currentAd->price) ?></span> ₽</p>
                     <p class="ticket__action"><?= strtoupper($currentAd->type->name) ?></p>
                 </div>
                 <div class="ticket__desc">
-                    <p><?= $currentAd->description ?></p>
+                    <p><?= Html::encode($currentAd->description) ?></p>
                 </div>
                 <div class="ticket__data">
                     <p>
@@ -58,7 +58,7 @@ if ($currentUser && $isNotAuthor) {
                     </p>
                     <p>
                         <b>Автор:</b>
-                        <a href="#"><?= $currentAd->authorUser->name . ' ' . $currentAd->authorUser->lastName ?></a>
+                        <a href="#"><?= Html::encode($currentAd->authorUser->name) . ' ' . Html::encode($currentAd->authorUser->lastName) ?></a>
                     </p>
                     <p>
                         <b>Контакты:</b>

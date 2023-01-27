@@ -5,6 +5,7 @@ declare(strict_types=1);
 /** @var Comments $comment */
 
 use omarinina\domain\models\ads\Comments;
+use yii\helpers\Html;
 
 ?>
 
@@ -18,10 +19,12 @@ use omarinina\domain\models\ads\Comments;
                         alt="Аватар пользователя"
                 >
             </a>
-            <p class="comment-card__author"><?= $comment->authorUser->name . ' ' . $comment->authorUser->lastName ?></p>
+            <p class="comment-card__author">
+                <?= Html::encode($comment->authorUser->name) . ' ' . Html::encode($comment->authorUser->lastName) ?>
+            </p>
         </div>
         <div class="comment-card__content">
-            <p><?= $comment->text ?></p>
+            <p><?= Html::encode($comment->text) ?></p>
         </div>
     </div>
 </li>

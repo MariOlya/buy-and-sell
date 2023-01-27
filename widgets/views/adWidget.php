@@ -42,12 +42,12 @@ if (is_array($ad)) {
             <?php endif; ?>
             <div class="ticket-card__header">
                 <h3 class="ticket-card__title">
-                    <a href="<?= Url::to(['offers/view', 'id' => $ad['id']]) ?>"><?= $ad['name'] ?></a>
+                    <a href="<?= Url::to(['offers/view', 'id' => $ad['id']]) ?>"><?= Html::encode($ad['name']) ?></a>
                 </h3>
-                <p class="ticket-card__price"><span class="js-sum"><?= $ad['price'] ?></span> ₽</p>
+                <p class="ticket-card__price"><span class="js-sum"><?= Html::encode($ad['price']) ?></span> ₽</p>
             </div>
             <div class="ticket-card__desc">
-                <p><?= mb_strimwidth($ad['description'], 0, 55, '...') ?></p>
+                <p><?= Html::encode(mb_strimwidth($ad['description'], 0, 55, '...')) ?></p>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@ if (is_array($ad)) {
                     srcset="<?= $ad->getFirstImage() ?? '/img/blank@2x.png 2x' ?>" alt="Изображение товара">
         </div>
         <div class="ticket-card__info">
-            <span class="ticket-card__label"><?= $ad->type->name ?></span>
+            <span class="ticket-card__label"><?= Html::encode($ad->type->name) ?></span>
             <div class="ticket-card__categories">
                 <?php foreach ($ad->adCategories as $category) : ?>
                     <a href="<?= Url::to(['offers/category', 'categoryId' => $category->id]) ?>">
@@ -79,11 +79,11 @@ if (is_array($ad)) {
                         <?php endif; ?>
                     ><?= $ad->name ?></a>
                 </h3>
-                <p class="ticket-card__price"><span class="js-sum"><?= $ad->price ?></span> ₽</p>
+                <p class="ticket-card__price"><span class="js-sum"><?= Html::encode($ad->price) ?></span> ₽</p>
             </div>
             <?php if (Yii::$app->request->url !== '/my/index') : ?>
             <div class="ticket-card__desc">
-                <p><?= mb_strimwidth($ad->description, 0, 55, '...') ?></p>
+                <p><?= Html::encode(mb_strimwidth($ad->description, 0, 55, '...')) ?></p>
             </div>
             <?php endif; ?>
         </div>
