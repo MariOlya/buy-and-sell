@@ -74,6 +74,12 @@ We work on this project with docker-compose.
 * mailhog/mailhog
 * rabbitmq:3-management
 
+To start project you need to add this command in the terminal
+
+```
+docker-compose up -d
+```
+
 You can then access the application locally through the following URL:
 
     http://127.0.0.1:8000
