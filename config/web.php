@@ -1,5 +1,6 @@
 <?php
 
+use omarinina\infrastructure\queues\CustomQueue;
 use yii\authclient\clients\VKontakte;
 use yii\authclient\Collection;
 use wapmorgan\yii2inflection\Inflection;
@@ -51,7 +52,7 @@ $config = [
             'class' => Inflection::class
         ],
         'emailQueue' => [
-            'class' => Queue::class,
+            'class' => CustomQueue::class,
             'as log' => LogBehavior::class,
             'ttr' => 3 * 60,
             'attempts' => 1,
