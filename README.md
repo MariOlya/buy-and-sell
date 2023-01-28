@@ -143,13 +143,7 @@ docker-compose run --rm php yii fixture/generate example --count=n
 
 ### Configuration for sphinx full-text search
 
-We work with Sphinx as docker container. You should do next step to start it locally.
-
-If you have already started your another containers, start docker containers with:
-
-    docker-compose up -d
-   
-If your containers haven't started yet please before start containers without sphinx. It needs to have connection to DB before starting.
+We work with Sphinx as docker container.
 
 Please, control the actual indexes. You can update these with
 
